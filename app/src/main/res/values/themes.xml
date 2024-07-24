@@ -4,6 +4,10 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
-
     <style name="Theme.MovieDbApplication" parent="Base.Theme.MovieDbApplication" />
+    <style name="Theme.AppCompat.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/movie_logo</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.MovieDbApplication</item>
+    </style>
 </resources>
