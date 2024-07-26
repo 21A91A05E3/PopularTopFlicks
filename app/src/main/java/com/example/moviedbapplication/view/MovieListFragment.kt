@@ -14,6 +14,7 @@ import com.example.moviedbapplication.model.remote.Resource
 import com.example.moviedbapplication.viewmodel.MovieListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 
 @AndroidEntryPoint
 class MovieListFragment : Fragment() {
@@ -31,7 +32,7 @@ class MovieListFragment : Fragment() {
         movieRecyclerView = view.findViewById(R.id.movieRecyclerView)
         val progressBar : ProgressBar = view.findViewById(R.id.progressBar)
         movieRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(requireContext(),2)
             movieAdapter = MovieAdapter(emptyList())
         }
         movieViewModel.movies.observe(viewLifecycleOwner) { resource ->

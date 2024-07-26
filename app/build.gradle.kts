@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-
 }
 android {
     namespace = "com.example.moviedbapplication"
@@ -32,7 +31,6 @@ android {
         jvmTarget = "1.8"
     }
 }
-
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -49,16 +47,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-//    implementation(libs.glide)
-//    annotationProcessor(libs.compiler)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v261)
     implementation(libs.androidx.lifecycle.livedata.ktx.v261)
     implementation(libs.androidx.fragment.ktx)
-    implementation(libs.glide.v4151)
-    annotationProcessor(libs.compiler.v4151)
-
+    implementation(libs.picasso)
 }
 kapt {
     correctErrorTypes = true
