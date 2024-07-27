@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso
 
 class MovieAdapter(private val movieList: List<MovieData>) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
-
     class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val movieImage: ImageView = itemView.findViewById(R.id.movieImage)
         fun loadMovie(movie: MovieData) {
@@ -19,18 +18,15 @@ class MovieAdapter(private val movieList: List<MovieData>) :
                 .resize(300, 450).into(movieImage)
         }
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.movie_list_item, parent, false)
         return MovieViewHolder(itemView)
     }
-
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = movieList[position]
         holder.loadMovie(movie)
     }
-
     override fun getItemCount(): Int {
         return movieList.size
     }

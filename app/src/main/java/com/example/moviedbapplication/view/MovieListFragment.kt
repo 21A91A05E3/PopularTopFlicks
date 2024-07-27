@@ -26,34 +26,43 @@ class MovieListFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.movie_list_fragment, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
         movieRecyclerView = view.findViewById(R.id.movieRecyclerView)
-        val progressBar : ProgressBar = view.findViewById(R.id.progressBar)
+        val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
         movieRecyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(),2)
-            movieAdapter = MovieAdapter(emptyList())
-        }
-        movieViewModel.movies.observe(viewLifecycleOwner) { resource ->
-            when (resource) {
-                is Resource.Loading -> {
-                    Log.d("Check","API Loading")
-                    progressBar.visibility = View.VISIBLE
-                }
-                is Resource.Success -> {
-                    Log.d("Check","API Calling")
-                    progressBar.visibility = View.GONE
-                    movieAdapter = MovieAdapter(resource.data ?: emptyList())
-                    movieRecyclerView.adapter = movieAdapter
-                }
-                is Resource.Error -> {
-                    Log.d("Check","API Error")
-                    progressBar.visibility = View.GONE
+            layoutManager = GridLayoutManager(requireContext(), 2)
+//            movieAdapter = MovieAdapter(emptyList())
+//            addOnScrollListener(object : PaginationScrollManager(layoutManager as LinearLayoutManager ){
+//                fun isLoading() = movieViewModel.isLoading
+//                fun
+//
+//            })
+//        }
+            movieViewModel.movies.observe(viewLifecycleOwner) { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        Log.d("Check", "API Loading")
+                        progressBar.visibility = View.VISIBLE
+                    }
+
+                    is Resource.Success -> {
+                        Log.d("Check", "API Calling")
+                        progressBar.visibility = View.GONE
+                        movieAdapter = MovieAdapter(resource.data ?: emptyList())
+                        movieRecyclerView.adapter = movieAdapter
+                    }
+
+                    else -> {
+                        Log.d("Check", "API Error")
+                        progressBar.visibility = View.GONE
+                    }
                 }
             }
+            movieViewModel.fetchMovies("popular")
         }
-        movieViewModel.fetchMovies("popular")
     }
 }
 
