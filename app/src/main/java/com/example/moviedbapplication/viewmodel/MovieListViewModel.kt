@@ -1,5 +1,6 @@
 package com.example.moviedbapplication.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,23 +13,46 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(private val repository: MovieRepository) :
-    ViewModel() {
+class MovieListViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+
     private val _movies = MutableLiveData<Resource<List<MovieData>>>()
     val movies: LiveData<Resource<List<MovieData>>> get() = _movies
 
-    private var currentPage = 1
+    var currentPage = 1
+    var totalPages = 50
     var isLoading = false
 
     fun fetchMovies(category: String) {
-        if (isLoading) return
+        if (isLoading || currentPage > totalPages) return
         isLoading = true
         _movies.value = Resource.Loading()
         viewModelScope.launch {
-            val result = repository.fetchMovies(category, currentPage)
-            _movies.value = result
-            if (result is Resource.Success) currentPage++
-            isLoading = false
+            try {
+                val response = movieRepository.fetchMovies(category, currentPage)
+                Log.d("Check", "API Response: $response")
+                when (response) {
+                    is Resource.Success -> {
+                        val movieResponse = response.data
+                        movieResponse?.let {
+                            val movieList = it.results?: emptyList()
+                            val existingMovies = (_movies.value as? Resource.Success)?.data ?: emptyList()
+                            _movies.value = Resource.Success(existingMovies+movieList)
+                            totalPages = it.totalPages?:50
+                            currentPage++
+                        }
+                    }
+                    else -> {
+                        _movies.value = Resource.Error("API Call Failed")
+                    }
+                }
+            } catch (e: Exception) {
+                _movies.value = Resource.Error("Failed to fetch data")
+            } finally {
+                isLoading = false
+            }
         }
+    }
+    fun hasMorePages(): Boolean{
+        return currentPage <= totalPages
     }
 }

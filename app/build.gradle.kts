@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -53,6 +55,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx.v261)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.picasso)
+    implementation("androidx.appcompat:appcompat:1.6.0-beta01")
+    implementation("androidx.paging:paging-common-ktx:3.3.1")
+    implementation("androidx.paging:paging-runtime-ktx:3.3.1")
+
 }
 kapt {
     correctErrorTypes = true
