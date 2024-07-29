@@ -15,7 +15,7 @@ class RetrofitImplementation {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/movie/")
+            .baseUrl(Constants.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
