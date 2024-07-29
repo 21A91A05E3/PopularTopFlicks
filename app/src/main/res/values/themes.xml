@@ -9,5 +9,7 @@
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/movie_logo</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.MovieDbApplication</item>
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+
     </style>
 </resources>
