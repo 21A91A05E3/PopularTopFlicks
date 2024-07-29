@@ -1,6 +1,5 @@
 package com.example.moviedbapplication.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,9 @@ import com.example.moviedbapplication.R
 import com.example.moviedbapplication.model.remote.MovieData
 import com.squareup.picasso.Picasso
 
-class MovieAdapter(private var movieList: MutableList<MovieData> , private val loadMore: () -> Unit) :
+class MovieAdapter( private val loadMore: () -> Unit) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+        private var movieList: List<MovieData> = listOf()
     class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val movieImage: ImageView = itemView.findViewById(R.id.movieImage)
         fun loadMovie(movie: MovieData) {
@@ -39,11 +39,7 @@ class MovieAdapter(private var movieList: MutableList<MovieData> , private val l
         return movieList.size
     }
     fun updateMovies(newMovies: List<MovieData>) {
-        val startPosition = movieList.size
-        movieList.addAll(newMovies)
-        notifyItemRangeInserted(startPosition, newMovies.size)
-        Log.d("MovieAdapter", "Movies updated: $newMovies")
-
+        movieList = newMovies
         notifyDataSetChanged()
     }
 }

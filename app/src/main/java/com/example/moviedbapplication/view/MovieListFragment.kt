@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
-import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,13 +16,12 @@ import com.example.moviedbapplication.model.remote.Resource
 import com.example.moviedbapplication.viewmodel.MovieListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MovieListFragment : Fragment() {
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var movieRecyclerView: RecyclerView
     private val movieViewModel: MovieListViewModel by viewModels()
-    private var currentCategory: String = "popular"
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
@@ -32,44 +29,26 @@ class MovieListFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
-        (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
-        toolbar.inflateMenu(R.menu.navigation_menu)
-        toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_popular -> {
-                    showMenu(toolbar)
-                    true
-                }
-                else -> false
-            }
-        }
         movieRecyclerView = view.findViewById(R.id.movieRecyclerView)
         val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
-        movieAdapter = MovieAdapter(mutableListOf()) {
-            if (movieViewModel.hasMorePages()) {
-                movieViewModel.fetchMovies("popular")
-            }
+        movieAdapter = MovieAdapter() {
+            movieViewModel.loadMore()
         }
         movieRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = movieAdapter
         }
-        val layoutManager = movieRecyclerView.layoutManager as GridLayoutManager
-        movieRecyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
-            override fun isLoading() = movieViewModel.isLoading
-            override fun remainingPages() = movieViewModel.hasMorePages()
-            override fun loadMoreItems() = movieViewModel.fetchMovies("popular")
-        })
         movieViewModel.movies.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> {
                     Log.d("Check", "API Loading")
-                    progressBar.visibility = View.VISIBLE
+                    progressBar.isVisible = true
+                    movieRecyclerView.isVisible = false
                 }
                 is Resource.Success -> {
                     Log.d("Check", "API Calling")
-                    progressBar.visibility = View.GONE
+                    progressBar.isVisible = false
+                    movieRecyclerView.isVisible = true
                     resource.data?.let { newMovies ->
                         Log.d("Check", "Movies: ${newMovies}")
                         movieAdapter.updateMovies(newMovies)
@@ -78,31 +57,16 @@ class MovieListFragment : Fragment() {
                 }
                 else -> {
                     Log.d("Check", "API Error")
-                    progressBar.visibility = View.GONE
+                    progressBar.isVisible = false
                 }
             }
         }
-        movieViewModel.fetchMovies(currentCategory)
+        movieViewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
+            movieViewModel.fetchMovies()
+        }
     }
-    private fun showMenu(view: View) {
-        val popMenu = PopupMenu(requireContext(), view)
-        popMenu.menuInflater.inflate(R.menu.navigation_menu, popMenu.menu)
-        popMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_popular -> {
-                    currentCategory = "popular"
-                    movieViewModel.fetchMovies(currentCategory)
-                    true
-                }
-                R.id.action_top_rated -> {
-                    currentCategory = "top_rated"
-                    movieViewModel.fetchMovies(currentCategory)
-                    true
-                }
-                else -> false
-            }
-        }
-        popMenu.show()
+    fun setCategory(category: String) {
+        movieViewModel.setSelectedCategory(category)
     }
 }
 
