@@ -19,7 +19,7 @@ class MovieListViewModel @Inject constructor(private val movieRepository: MovieR
     val movies: LiveData<Resource<List<MovieData>>> get() = _movies
 
     var currentPage = 1
-    var totalPages = 50
+    var totalPages = 1
     var isLoading = false
 
     fun fetchMovies(category: String) {
@@ -37,7 +37,7 @@ class MovieListViewModel @Inject constructor(private val movieRepository: MovieR
                             val movieList = it.results?: emptyList()
                             val existingMovies = (_movies.value as? Resource.Success)?.data ?: emptyList()
                             _movies.value = Resource.Success(existingMovies+movieList)
-                            totalPages = it.totalPages?:50
+                            totalPages = it.totalPages?:1
                             currentPage++
                         }
                     }

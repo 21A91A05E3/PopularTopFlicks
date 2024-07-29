@@ -1,5 +1,6 @@
 package com.example.moviedbapplication.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,7 @@ class MovieAdapter(private var movieList: MutableList<MovieData> , private val l
             val posterUrl = movie.posterPath?.let { "https://image.tmdb.org/t/p/w500$it" }
             if (posterUrl != null) {
                 Picasso.get().load(posterUrl)
-                    .resize(300, 450)
+                    .resize(600,750)
                     .placeholder(R.drawable.placeholder_image)
                     .into(movieImage)
             } else {
@@ -41,6 +42,8 @@ class MovieAdapter(private var movieList: MutableList<MovieData> , private val l
         val startPosition = movieList.size
         movieList.addAll(newMovies)
         notifyItemRangeInserted(startPosition, newMovies.size)
-    }
+        Log.d("MovieAdapter", "Movies updated: $newMovies")
 
+        notifyDataSetChanged()
+    }
 }
