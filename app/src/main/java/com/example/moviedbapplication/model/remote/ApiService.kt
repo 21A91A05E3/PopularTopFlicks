@@ -15,4 +15,7 @@ interface ApiService {
     @GET("{movie_id}/videos")
     suspend fun getMovieTrailers(@Path("movie_id") movieId : Int, @Query("api_key") apiKey: String) : Response<TrailerResponse>
 
+    @GET("{movie_id}/reviews")
+    suspend fun getMovieReviews(@Path("movie_id") movieId : Int, @Query("api_key") apiKey: String) : Response<ReviewResponse>
+
 }

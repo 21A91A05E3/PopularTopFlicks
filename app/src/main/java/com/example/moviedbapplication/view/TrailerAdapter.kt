@@ -1,36 +1,52 @@
-//package com.example.moviedbapplication.view
-//
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//import android.widget.TextView
-//import androidx.recyclerview.widget.RecyclerView
-//import com.example.moviedbapplication.R
-//import com.example.moviedbapplication.model.remote.TrailerResult
-//
-//class TrailerAdapter(private val trailers: List<TrailerResult>, private val onTrailerClick: (String) -> Unit) :
-//    RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder>() {
-//
-//    class TrailerViewHolder(itemView: View, private val onTrailerClick: (String) -> Unit) : RecyclerView.ViewHolder(itemView) {
-//        private val trailerTitle: TextView = itemView.findViewById(R.id.trailerTitle)
-//
-//        fun bind(trailer: Trailer) {
-//            trailerTitle.text = trailer.name
-//            itemView.setOnClickListener {
-//                trailer.key?.let { onTrailerClick(it) }
-//            }
-//        }
-//    }
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrailerViewHolder {
-//        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.trailer_list_item, parent, false)
-//        return TrailerViewHolder(itemView, onTrailerClick)
-//    }
-//
-//    override fun onBindViewHolder(holder: TrailerViewHolder, position: Int) {
-//        val trailer = trailers[position]
-//        holder.bind(trailer)
-//    }
-//
-//    override fun getItemCount(): Int = trailers.size
-//}
+package com.example.moviedbapplication.view
+
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.moviedbapplication.R
+import com.example.moviedbapplication.model.remote.TrailerResult
+import com.squareup.picasso.Picasso
+
+class TrailerAdapter(
+    private val onTrailerClick: (String) -> Unit,
+) : RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder>() {
+
+    private var trailers = listOf<TrailerResult?>()
+
+    class TrailerViewHolder(itemView: View, private val onTrailerClick: (String) -> Unit) :
+        RecyclerView.ViewHolder(itemView) {
+        private val trailerImage: ImageView = itemView.findViewById(R.id.trailerImage)
+        fun bind(trailer: TrailerResult) {
+            val thumbnailUrl = "https://img.youtube.com/vi/${trailer.key}/0.jpg"
+            Picasso.get().load(thumbnailUrl)
+                .into(trailerImage)
+
+            itemView.setOnClickListener {
+                if(trailer.key?.isNotBlank() == true) {
+                    onTrailerClick(trailer.key)
+                }
+
+            }
+        }
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrailerViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.movie_trailer_item, parent, false)
+        return TrailerViewHolder(itemView, onTrailerClick)
+    }
+    override fun getItemCount(): Int {
+        return trailers.size
+    }
+    override fun onBindViewHolder(holder: TrailerViewHolder, position: Int)  {
+        trailers.getOrNull(position)?.let {
+            holder.bind(it)
+        }
+    }
+
+    fun updateTrailers(newTrailers: List<TrailerResult?>){
+        trailers = newTrailers
+        notifyDataSetChanged()
+    }
+}
