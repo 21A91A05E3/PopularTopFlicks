@@ -16,7 +16,6 @@ import com.example.moviedbapplication.model.remote.Resource
 import com.example.moviedbapplication.viewmodel.MovieListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MovieListFragment : Fragment() {
     private lateinit var movieAdapter: MovieAdapter
@@ -30,10 +29,20 @@ class MovieListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         movieRecyclerView = view.findViewById(R.id.movieRecyclerView)
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
-        movieAdapter = MovieAdapter() {
-            movieViewModel.loadMore()
-        }
+   val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
+        movieAdapter = MovieAdapter(
+            onItemClick = { movie ->
+                val bundle = Bundle().apply {
+                    putInt("MovieId",movie)
+                }
+                Log.d("Details", "Received Movie Id in List Frag: $movie")
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view, MovieDetailFragment().apply { arguments = bundle })
+                    .addToBackStack(null)
+                    .commit()
+            },
+            loadMore = { movieViewModel.loadMore() }
+        )
         movieRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = movieAdapter
@@ -41,12 +50,12 @@ class MovieListFragment : Fragment() {
         movieViewModel.movies.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> {
-                    Log.d("Check", "API Loading")
+                    Log.d("Check","API Loading")
                     progressBar.isVisible = true
                     movieRecyclerView.isVisible = false
                 }
                 is Resource.Success -> {
-                    Log.d("Check", "API Calling")
+                    Log.d("Check","API Calling")
                     progressBar.isVisible = false
                     movieRecyclerView.isVisible = true
                     resource.data?.let { newMovies ->
@@ -55,10 +64,7 @@ class MovieListFragment : Fragment() {
                         movieAdapter.notifyDataSetChanged()
                     }
                 }
-                else -> {
-                    Log.d("Check", "API Error")
-                    progressBar.isVisible = false
-                }
+                else -> progressBar.isVisible = false
             }
         }
         movieViewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
