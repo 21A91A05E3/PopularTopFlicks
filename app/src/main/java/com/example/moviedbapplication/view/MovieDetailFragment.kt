@@ -3,7 +3,6 @@ package com.example.moviedbapplication.view
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -31,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MovieDetailFragment : Fragment() {
-
     private val movieDetailViewModel: MovieDetailViewModel by viewModels()
     private lateinit var movieImage: ImageView
     private lateinit var movieTitle: TextView
@@ -41,28 +37,14 @@ class MovieDetailFragment : Fragment() {
     private lateinit var trailerRecyclerView: RecyclerView
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var reviewRecyclerView: RecyclerView
-    private lateinit var favouriteButton : ImageButton
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
+    private lateinit var favouriteButton: ImageButton
+    private lateinit var backButton: ImageButton
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View? {
         return inflater.inflate(R.layout.movie_detail_fragment, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val movieId = arguments?.getInt("MovieId")
-        (activity as? AppCompatActivity)?.apply {
-            val toolbar: Toolbar? = findViewById(R.id.toolbar)
-            setSupportActionBar(toolbar)
-            supportActionBar?.apply {
-                setDisplayHomeAsUpEnabled(true)
-                setDisplayShowHomeEnabled(true)
-            }
-            toolbar?.setNavigationOnClickListener {
-                onBackPressedDispatcher.onBackPressed()
-            }
-        }
         movieImage = view.findViewById(R.id.movieImage)
         movieTitle = view.findViewById(R.id.movieTitle)
         movieReleaseDate = view.findViewById(R.id.movieReleaseDate)
@@ -70,15 +52,22 @@ class MovieDetailFragment : Fragment() {
         trailerRecyclerView = view.findViewById(R.id.trailerRecyclerView)
         reviewRecyclerView = view.findViewById(R.id.reviewRecyclerView)
         favouriteButton = view.findViewById(R.id.favouriteButton)
-
+        backButton = view.findViewById(R.id.backButton)
         trailerAdapter = TrailerAdapter { trailerKey ->
             try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.TRAILER_BASE_URL + trailerKey)))
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW, Uri.parse(Constants.TRAILER_BASE_URL + trailerKey)
+                    )
+                )
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Unable to play this trailer...!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(), "Unable to play this trailer...!", Toast.LENGTH_SHORT
+                ).show()
             }
         }
-        trailerRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        trailerRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         trailerRecyclerView.adapter = trailerAdapter
         reviewAdapter = ReviewAdapter()
         reviewRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -87,6 +76,7 @@ class MovieDetailFragment : Fragment() {
             movieDetailViewModel.loadData(id)
             movieDetailViewModel.checkIfFavourite(id)
         }
+
         movieDetailViewModel.movieDetails.observe(viewLifecycleOwner, Observer { movie ->
             movie?.let {
                 updateMovieDetails(it)
@@ -102,22 +92,27 @@ class MovieDetailFragment : Fragment() {
                 updateReviewDetails(review)
             }
         }
-        movieDetailViewModel.checkIfFavourite(movieId ?: 0).observe(viewLifecycleOwner) { isFavourite ->
-            favouriteButton.setImageResource(
-                if(isFavourite) R.drawable.liked_icon else R.drawable.unliked_icon
-            )
-        }
-        favouriteButton.setOnClickListener{
-            movieId?.let{ id->
+        movieDetailViewModel.checkIfFavourite(movieId ?: 0)
+            .observe(viewLifecycleOwner) { isFavourite ->
+                favouriteButton.setImageResource(
+                    if (isFavourite) R.drawable.liked_icon else R.drawable.unliked_icon
+                )
+            }
+        favouriteButton.setOnClickListener {
+            movieId?.let { id ->
                 movieDetailViewModel.toggleFavourite(id)
             }
         }
+
+        backButton.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
     }
     private fun updateMovieDetails(movie: MovieData) {
-        val posterUrl = movie.posterPath?.let { "https://image.tmdb.org/t/p/w500$it" }
+        val posterUrl = movie.backdropPath?.let { "https://image.tmdb.org/t/p/w500$it" }
         posterUrl?.let {
-            Picasso.get().load(it).resize(600,700)
-                .placeholder(R.drawable.placeholder_image).into(movieImage)
+            Picasso.get().load(it).placeholder(R.drawable.placeholder_image)
+                .into(movieImage)
         } ?: run {
             movieImage.setImageResource(R.drawable.placeholder_image)
         }
@@ -126,11 +121,17 @@ class MovieDetailFragment : Fragment() {
         movieOverview.text = movie.overview
     }
     private fun updateTrailerDetails(trailer: List<TrailerResult?>) {
-        Log.d("Details", "Got the Trailer in ViewModel")
         trailerAdapter.updateTrailers(trailer)
     }
-    private fun updateReviewDetails(review : List<ReviewResult?>){
+    private fun updateReviewDetails(review: List<ReviewResult?>) {
         reviewAdapter.updateReviews(review)
     }
-
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.hideMenuBar()
+    }
+    override fun onPause() {
+        super.onPause()
+        (activity as? MainActivity)?.showMenuBar()
+    }
 }

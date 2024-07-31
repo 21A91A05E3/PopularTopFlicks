@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                updateToolbarMenu(menuInflater, menu)
+                menuInflater.inflate(R.menu.navigation_menu, menu)
             }
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
@@ -32,28 +32,18 @@ class MainActivity : AppCompatActivity() {
                         setCategory(POPULAR)
                         true
                     }
+
                     R.id.action_top_rated -> {
                         setCategory(TOP_RATED)
                         true
                     }
+
                     else -> false
                 }
             }
         })
         if (savedInstanceState == null) {
-            showMovieListFragment()
-        }
-    }
-    private fun showMovieListFragment() {
-        currentFragment = MovieListFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, currentFragment!!).addToBackStack(null).commit()
-        supportFragmentManager.addOnBackStackChangedListener {
-            currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
-            val menuInflater = MenuInflater(this)
-            val toolbar = findViewById<Toolbar>(R.id.toolbar)
-            val menu = toolbar.menu
-            updateToolbarMenu(menuInflater, menu)
+            showMovieListFragment(MovieListFragment())
         }
     }
     fun setCategory(category: String) {
@@ -61,28 +51,16 @@ class MainActivity : AppCompatActivity() {
             (currentFragment as? MovieListFragment)?.setCategory(category)
         }
     }
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStack()
-            val menuInflater = MenuInflater(this)
-            val toolbar = findViewById<Toolbar>(R.id.toolbar)
-            val menu = toolbar.menu
-            updateToolbarMenu(menuInflater, menu)
-        } else {
-            super.onBackPressedDispatcher.onBackPressed()
-        }
+    private fun showMovieListFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container_view, fragment)
+            .addToBackStack(null).commit()
+        currentFragment = fragment
     }
-    private fun updateToolbarMenu(menuInflater: MenuInflater, menu: Menu) {
-        menu.clear()
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        when (currentFragment) {
-            is MovieListFragment -> {
-                menuInflater.inflate(R.menu.navigation_menu, menu)
-                toolbar?.navigationIcon = null
-            }
-            is MovieDetailFragment -> toolbar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.back_arrow)
-            else -> toolbar?.navigationIcon = null
-        }
+    fun hideMenuBar() {
+        findViewById<View>(R.id.toolbar).visibility = View.GONE
+    }
+    fun showMenuBar() {
+        findViewById<View>(R.id.toolbar).visibility = View.VISIBLE
     }
     companion object {
         const val POPULAR = "popular"
