@@ -19,16 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
-
     private val _movieDetails = MutableLiveData<MovieData?>()
     val movieDetails: LiveData<MovieData?> get() = _movieDetails
-
     private val _trailerDetails = MutableLiveData<List<TrailerResult?>>()
     val trailerDetails: MutableLiveData<List<TrailerResult?>> get() = _trailerDetails
-
     private val _reviewDetails = MutableLiveData<List<ReviewResult?>>()
     val reviewDetails: MutableLiveData<List<ReviewResult?>> get() = _reviewDetails
-
     private suspend fun loadMovieDetails(movieId: Int) {
         Log.d("Details", "Received Movie Id in View Model: $movieId")
         when (val result = movieRepository.fetchMovieDetails(movieId)) {
