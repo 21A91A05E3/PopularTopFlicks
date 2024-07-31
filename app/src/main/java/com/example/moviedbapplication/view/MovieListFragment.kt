@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviedbapplication.R
 import com.example.moviedbapplication.model.remote.Resource
+import com.example.moviedbapplication.view.Adapter.MovieAdapter
 import com.example.moviedbapplication.viewmodel.MovieListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

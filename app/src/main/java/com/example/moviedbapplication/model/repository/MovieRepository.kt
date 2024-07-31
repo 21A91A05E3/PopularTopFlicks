@@ -4,11 +4,11 @@ import android.util.Log
 import com.example.moviedbapplication.model.local.MovieDao
 import com.example.moviedbapplication.model.remote.ApiService
 import com.example.moviedbapplication.model.remote.Constants
-import com.example.moviedbapplication.model.remote.MovieData
-import com.example.moviedbapplication.model.remote.MovieResponse
+import com.example.moviedbapplication.model.remote.moviedata.MovieData
+import com.example.moviedbapplication.model.remote.moviedata.MovieResponse
 import com.example.moviedbapplication.model.remote.Resource
-import com.example.moviedbapplication.model.remote.ReviewResult
-import com.example.moviedbapplication.model.remote.TrailerResult
+import com.example.moviedbapplication.model.remote.reviewdata.ReviewResult
+import com.example.moviedbapplication.model.remote.trailerdata.TrailerResult
 import com.example.moviedbapplication.model.local.MovieLocalData
 import retrofit2.HttpException
 import java.io.IOException

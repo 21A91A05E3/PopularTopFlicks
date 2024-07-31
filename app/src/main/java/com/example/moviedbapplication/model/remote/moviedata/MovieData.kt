@@ -1,4 +1,4 @@
-package com.example.moviedbapplication.model.remote
+package com.example.moviedbapplication.model.remote.moviedata
 
 import com.google.gson.annotations.SerializedName
 

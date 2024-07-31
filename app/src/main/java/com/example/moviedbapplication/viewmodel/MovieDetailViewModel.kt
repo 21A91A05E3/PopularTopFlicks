@@ -6,10 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviedbapplication.model.local.MovieLocalData
-import com.example.moviedbapplication.model.remote.MovieData
+import com.example.moviedbapplication.model.remote.moviedata.MovieData
 import com.example.moviedbapplication.model.remote.Resource
-import com.example.moviedbapplication.model.remote.ReviewResult
-import com.example.moviedbapplication.model.remote.TrailerResult
+import com.example.moviedbapplication.model.remote.reviewdata.ReviewResult
+import com.example.moviedbapplication.model.remote.trailerdata.TrailerResult
 import com.example.moviedbapplication.model.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async

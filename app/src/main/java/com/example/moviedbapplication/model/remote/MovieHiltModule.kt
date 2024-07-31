@@ -21,7 +21,7 @@ object MovieHiltModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(apiService : ApiService , movieDao: MovieDao) : MovieRepository = MovieRepository(apiService,movieDao)
+    fun provideMovieRepository(apiService : ApiService, movieDao: MovieDao) : MovieRepository = MovieRepository(apiService,movieDao)
 
     @Provides
     @Singleton

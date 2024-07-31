@@ -1,4 +1,4 @@
-package com.example.moviedbapplication.view
+package com.example.moviedbapplication.view.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviedbapplication.R
-import com.example.moviedbapplication.model.remote.MovieData
+import com.example.moviedbapplication.model.remote.moviedata.MovieData
 import com.squareup.picasso.Picasso
 
 class MovieAdapter( private val loadMore: () -> Unit , private val onItemClick : (Int) -> Unit) :

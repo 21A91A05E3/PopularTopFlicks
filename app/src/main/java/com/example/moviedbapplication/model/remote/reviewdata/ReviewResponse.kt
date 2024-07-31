@@ -1,12 +1,14 @@
-package com.example.moviedbapplication.model.remote
+package com.example.moviedbapplication.model.remote.reviewdata
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieResponse(
+data class ReviewResponse(
+    @SerializedName("id")
+    val id: Int?,
     @SerializedName("page")
     val page: Int?,
     @SerializedName("results")
-    val results: List<MovieData>?,
+    val results: List<ReviewResult?>?,
     @SerializedName("total_pages")
     val totalPages: Int?,
     @SerializedName("total_results")

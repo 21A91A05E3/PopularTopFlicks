@@ -1,4 +1,4 @@
-package com.example.moviedbapplication.view
+package com.example.moviedbapplication.view.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviedbapplication.R
-import com.example.moviedbapplication.model.remote.ReviewResult
+import com.example.moviedbapplication.model.remote.reviewdata.ReviewResult
 
 class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
     private var reviews = listOf<ReviewResult?>()
     class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val reviewText : TextView = itemView.findViewById(R.id.reviewText)
-        fun bind(review  :ReviewResult){
+        fun bind(review  : ReviewResult){
             reviewText.text = review.content
         }
     }

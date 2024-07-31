@@ -20,9 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviedbapplication.R
 import com.example.moviedbapplication.model.remote.Constants
-import com.example.moviedbapplication.model.remote.MovieData
-import com.example.moviedbapplication.model.remote.ReviewResult
-import com.example.moviedbapplication.model.remote.TrailerResult
+import com.example.moviedbapplication.model.remote.moviedata.MovieData
+import com.example.moviedbapplication.model.remote.reviewdata.ReviewResult
+import com.example.moviedbapplication.model.remote.trailerdata.TrailerResult
+import com.example.moviedbapplication.view.Adapter.ReviewAdapter
+import com.example.moviedbapplication.view.Adapter.TrailerAdapter
 import com.example.moviedbapplication.viewmodel.MovieDetailViewModel
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint

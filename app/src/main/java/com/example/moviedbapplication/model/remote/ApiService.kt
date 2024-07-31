@@ -1,5 +1,9 @@
 package com.example.moviedbapplication.model.remote
 
+import com.example.moviedbapplication.model.remote.moviedata.MovieData
+import com.example.moviedbapplication.model.remote.moviedata.MovieResponse
+import com.example.moviedbapplication.model.remote.reviewdata.ReviewResponse
+import com.example.moviedbapplication.model.remote.trailerdata.TrailerResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

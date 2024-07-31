@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviedbapplication.model.remote.MovieData
+import com.example.moviedbapplication.model.remote.moviedata.MovieData
 import com.example.moviedbapplication.model.remote.Resource
 import com.example.moviedbapplication.model.repository.MovieRepository
 import com.example.moviedbapplication.view.MainActivity
