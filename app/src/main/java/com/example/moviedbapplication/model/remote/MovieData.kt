@@ -1,6 +1,5 @@
 package com.example.moviedbapplication.model.remote
 
-
 import com.google.gson.annotations.SerializedName
 
 data class MovieData(

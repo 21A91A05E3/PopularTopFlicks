@@ -16,7 +16,6 @@ import com.example.moviedbapplication.model.remote.Resource
 import com.example.moviedbapplication.viewmodel.MovieListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MovieListFragment : Fragment() {
     private lateinit var movieAdapter: MovieAdapter
@@ -31,9 +30,15 @@ class MovieListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         movieRecyclerView = view.findViewById(R.id.movieRecyclerView)
         val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
-        movieAdapter = MovieAdapter() {
-            movieViewModel.loadMore()
-        }
+        movieAdapter = MovieAdapter(onItemClick = { movie ->
+            val bundle = Bundle().apply {
+                putInt("MovieId", movie)
+            }
+            parentFragmentManager.beginTransaction().replace(
+                    R.id.fragment_container_view,
+                    MovieDetailFragment().apply { arguments = bundle }).addToBackStack(null)
+                .commit()
+        }, loadMore = { movieViewModel.loadMore() })
         movieRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = movieAdapter
@@ -55,13 +60,10 @@ class MovieListFragment : Fragment() {
                         movieAdapter.notifyDataSetChanged()
                     }
                 }
-                else -> {
-                    Log.d("Check", "API Error")
-                    progressBar.isVisible = false
-                }
+                else -> progressBar.isVisible = false
             }
         }
-        movieViewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
+        movieViewModel.selectedCategory.observe(viewLifecycleOwner) {
             movieViewModel.fetchMovies()
         }
     }

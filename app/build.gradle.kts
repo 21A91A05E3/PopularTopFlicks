@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
 }
 android {
     namespace = "com.example.moviedbapplication"
@@ -30,6 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    viewBinding{
+        enable = true
+    }
 }
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -55,10 +59,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx.v261)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.picasso)
-    implementation("androidx.appcompat:appcompat:1.6.0-beta01")
-    implementation("androidx.paging:paging-common-ktx:3.3.1")
-    implementation("androidx.paging:paging-runtime-ktx:3.3.1")
-
+    implementation("androidx.appcompat:appcompat:1.7.0-beta01")
 }
 kapt {
     correctErrorTypes = true
