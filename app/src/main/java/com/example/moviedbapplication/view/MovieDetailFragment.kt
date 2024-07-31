@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -39,7 +41,6 @@ class MovieDetailFragment : Fragment() {
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var reviewRecyclerView: RecyclerView
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,11 +48,20 @@ class MovieDetailFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.movie_detail_fragment, container, false)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val movieId = arguments?.getInt("MovieId")
-
+        (activity as? AppCompatActivity)?.apply {
+            val toolbar: Toolbar? = findViewById(R.id.toolbar)
+            setSupportActionBar(toolbar)
+            supportActionBar?.apply {
+                setDisplayHomeAsUpEnabled(true)
+                setDisplayShowHomeEnabled(true)
+            }
+            toolbar?.setNavigationOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
         movieImage = view.findViewById(R.id.movieImage)
         movieTitle = view.findViewById(R.id.movieTitle)
         movieRating = view.findViewById(R.id.movieRating)
@@ -66,7 +76,6 @@ class MovieDetailFragment : Fragment() {
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Unable to play this trailer...!", Toast.LENGTH_SHORT).show()
             }
-
         }
         trailerRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         trailerRecyclerView.adapter = trailerAdapter
@@ -74,9 +83,6 @@ class MovieDetailFragment : Fragment() {
         reviewAdapter = ReviewAdapter()
         reviewRecyclerView.layoutManager = LinearLayoutManager(context)
         reviewRecyclerView.adapter = reviewAdapter
-
-
-        Log.d("Details", "Received Movie Id in Detail Frag: $movieId")
 
         movieId?.let { id ->
             movieDetailViewModel.loadData(id)
@@ -91,7 +97,6 @@ class MovieDetailFragment : Fragment() {
                 updateTrailerDetails(trailer)
             }
         }
-
         movieDetailViewModel.reviewDetails.observe(viewLifecycleOwner) { review ->
             review?.let {
                 updateReviewDetails(review)

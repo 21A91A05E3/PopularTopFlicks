@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName
 data class ReviewResult(
     @SerializedName("author")
     val author: String?,
-    @SerializedName("author_details")
-    val authorDetails: AuthorDetails?,
     @SerializedName("content")
     val content: String?,
     @SerializedName("created_at")
