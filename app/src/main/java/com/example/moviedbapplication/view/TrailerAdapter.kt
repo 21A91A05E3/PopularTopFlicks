@@ -1,6 +1,5 @@
 package com.example.moviedbapplication.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +12,7 @@ import com.squareup.picasso.Picasso
 class TrailerAdapter(
     private val onTrailerClick: (String) -> Unit,
 ) : RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder>() {
-
     private var trailers = listOf<TrailerResult?>()
-
     class TrailerViewHolder(itemView: View, private val onTrailerClick: (String) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
         private val trailerImage: ImageView = itemView.findViewById(R.id.trailerImage)
@@ -23,12 +20,10 @@ class TrailerAdapter(
             val thumbnailUrl = "https://img.youtube.com/vi/${trailer.key}/0.jpg"
             Picasso.get().load(thumbnailUrl)
                 .into(trailerImage)
-
             itemView.setOnClickListener {
                 if(trailer.key?.isNotBlank() == true) {
                     onTrailerClick(trailer.key)
                 }
-
             }
         }
     }
@@ -44,7 +39,6 @@ class TrailerAdapter(
             holder.bind(it)
         }
     }
-
     fun updateTrailers(newTrailers: List<TrailerResult?>){
         trailers = newTrailers
         notifyDataSetChanged()

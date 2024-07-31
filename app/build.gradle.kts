@@ -60,6 +60,10 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.picasso)
     implementation("androidx.appcompat:appcompat:1.7.0-beta01")
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
 }
 kapt {
     correctErrorTypes = true

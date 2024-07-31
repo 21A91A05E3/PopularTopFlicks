@@ -34,10 +34,8 @@ class MovieListFragment : Fragment() {
             val bundle = Bundle().apply {
                 putInt("MovieId", movie)
             }
-            parentFragmentManager.beginTransaction().replace(
-                    R.id.fragment_container_view,
-                    MovieDetailFragment().apply { arguments = bundle }).addToBackStack(null)
-                .commit()
+            parentFragmentManager.beginTransaction().replace(R.id.fragment_container_view,
+                MovieDetailFragment().apply { arguments = bundle }).addToBackStack(null).commit()
         }, loadMore = { movieViewModel.loadMore() })
         movieRecyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)

@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     private var currentFragment: Fragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +32,10 @@ class MainActivity : AppCompatActivity() {
                         setCategory(POPULAR)
                         true
                     }
-
                     R.id.action_top_rated -> {
                         setCategory(TOP_RATED)
                         true
                     }
-
                     else -> false
                 }
             }
@@ -83,13 +80,8 @@ class MainActivity : AppCompatActivity() {
                 menuInflater.inflate(R.menu.navigation_menu, menu)
                 toolbar?.navigationIcon = null
             }
-
-            is MovieDetailFragment -> {
-                toolbar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.back_arrow)
-            }
-            else -> {
-                toolbar?.navigationIcon = null
-            }
+            is MovieDetailFragment -> toolbar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.back_arrow)
+            else -> toolbar?.navigationIcon = null
         }
     }
     companion object {

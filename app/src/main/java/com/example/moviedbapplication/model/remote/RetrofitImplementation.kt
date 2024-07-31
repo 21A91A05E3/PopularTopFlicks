@@ -13,7 +13,6 @@ class RetrofitImplementation {
         val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
-
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .client(okHttpClient)
