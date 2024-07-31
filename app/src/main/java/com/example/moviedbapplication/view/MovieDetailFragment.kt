@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -30,17 +31,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class MovieDetailFragment : Fragment() {
 
     private val movieDetailViewModel: MovieDetailViewModel by viewModels()
-
     private lateinit var movieImage: ImageView
     private lateinit var movieTitle: TextView
-    private lateinit var movieRating: TextView
     private lateinit var movieReleaseDate: TextView
     private lateinit var movieOverview: TextView
     private lateinit var trailerAdapter: TrailerAdapter
     private lateinit var trailerRecyclerView: RecyclerView
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var reviewRecyclerView: RecyclerView
-
+    private lateinit var favouriteButton : ImageButton
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,11 +63,11 @@ class MovieDetailFragment : Fragment() {
         }
         movieImage = view.findViewById(R.id.movieImage)
         movieTitle = view.findViewById(R.id.movieTitle)
-        movieRating = view.findViewById(R.id.movieRating)
         movieReleaseDate = view.findViewById(R.id.movieReleaseDate)
         movieOverview = view.findViewById(R.id.movieOverview)
         trailerRecyclerView = view.findViewById(R.id.trailerRecyclerView)
         reviewRecyclerView = view.findViewById(R.id.reviewRecyclerView)
+        favouriteButton = view.findViewById(R.id.favouriteButton)
 
         trailerAdapter = TrailerAdapter { trailerKey ->
             try {
@@ -79,17 +78,16 @@ class MovieDetailFragment : Fragment() {
         }
         trailerRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         trailerRecyclerView.adapter = trailerAdapter
-
         reviewAdapter = ReviewAdapter()
         reviewRecyclerView.layoutManager = LinearLayoutManager(context)
         reviewRecyclerView.adapter = reviewAdapter
-
         movieId?.let { id ->
             movieDetailViewModel.loadData(id)
+            movieDetailViewModel.checkIfFavourite(id)
         }
         movieDetailViewModel.movieDetails.observe(viewLifecycleOwner, Observer { movie ->
-            if (movie != null) {
-                updateMovieDetails(movie)
+            movie?.let {
+                updateMovieDetails(it)
             }
         })
         movieDetailViewModel.trailerDetails.observe(viewLifecycleOwner) { trailer ->
@@ -102,26 +100,35 @@ class MovieDetailFragment : Fragment() {
                 updateReviewDetails(review)
             }
         }
+        movieDetailViewModel.checkIfFavourite(movieId ?: 0).observe(viewLifecycleOwner) { isFavourite ->
+            favouriteButton.setImageResource(
+                if(isFavourite) R.drawable.liked_icon else R.drawable.unliked_icon
+            )
+        }
+        favouriteButton.setOnClickListener{
+            movieId?.let{ id->
+                movieDetailViewModel.toggleFavourite(id)
+            }
+        }
     }
     private fun updateMovieDetails(movie: MovieData) {
         val posterUrl = movie.posterPath?.let { "https://image.tmdb.org/t/p/w500$it" }
-        if (posterUrl != null) {
-            Picasso.get().load(posterUrl).placeholder(R.drawable.placeholder_image).into(movieImage)
-        } else {
+        posterUrl?.let {
+            Picasso.get().load(it).resize(600,700)
+                .placeholder(R.drawable.placeholder_image).into(movieImage)
+        } ?: run {
             movieImage.setImageResource(R.drawable.placeholder_image)
         }
         movieReleaseDate.text = movie.releaseDate
         movieTitle.text = movie.title
         movieOverview.text = movie.overview
     }
-
     private fun updateTrailerDetails(trailer: List<TrailerResult?>) {
         Log.d("Details", "Got the Trailer in ViewModel")
         trailerAdapter.updateTrailers(trailer)
     }
-
     private fun updateReviewDetails(review : List<ReviewResult?>){
         reviewAdapter.updateReviews(review)
-
     }
+
 }
