@@ -1,6 +1,5 @@
 package com.example.moviedbapplication.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,26 +25,24 @@ class MovieDetailViewModel @Inject constructor(private val movieRepository: Movi
     private val _reviewDetails = MutableLiveData<List<ReviewResult?>>()
     val reviewDetails: MutableLiveData<List<ReviewResult?>> get() = _reviewDetails
     private suspend fun loadMovieDetails(movieId: Int) {
-        Log.d("Details", "Received Movie Id in View Model: $movieId")
         when (val result = movieRepository.fetchMovieDetails(movieId)) {
             is Resource.Success -> {
-                Log.d("Details", "API Call Success in viewModel")
-                _movieDetails.value = result.data
+                _movieDetails.postValue(result.data)
             }
-            is Resource.Loading -> Log.d("Details", "API Loading")
-            else -> Log.d("Details", "API Call Fail")
+            is Resource.Loading -> {}
+            else -> Unit
         }
     }
     private suspend fun loadMovieTrailers(movieId: Int) {
         when (val result = movieRepository.fetchMovieTrailers(movieId)) {
             is Resource.Success -> _trailerDetails.postValue(result.data ?: emptyList<TrailerResult>())
-            else -> Log.d("Details", "API Call Fail")
+            else -> Unit
         }
     }
     private suspend fun loadMovieReviews(movieId: Int) {
         when (val result = movieRepository.fetchMovieReviews(movieId)) {
             is Resource.Success -> _reviewDetails.postValue(result.data ?: emptyList<ReviewResult>())
-            else -> Log.d("Details", "API Call Fail")
+            else -> Unit
         }
     }
     fun loadData(movieId: Int) = viewModelScope.launch {

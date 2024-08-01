@@ -109,12 +109,10 @@ class MovieDetailFragment : Fragment() {
                 movieDetailViewModel.toggleFavourite(id)
             }
         }
-
         backButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
     }
-
     private fun updateMovieDetails(movie: MovieData) {
         val posterUrl = movie.backdropPath?.let { "https://image.tmdb.org/t/p/w500$it" }
         posterUrl?.let {
@@ -126,20 +124,16 @@ class MovieDetailFragment : Fragment() {
         movieTitle.text = movie.title
         movieOverview.text = movie.overview
     }
-
     private fun updateTrailerDetails(trailer: List<TrailerResult?>) {
         trailerAdapter.updateTrailers(trailer)
     }
-
     private fun updateReviewDetails(review: List<ReviewResult?>) {
         reviewAdapter.updateReviews(review)
     }
-
     override fun onResume() {
         super.onResume()
         (activity as? MainActivity)?.hideMenuBar()
     }
-
     override fun onPause() {
         super.onPause()
         (activity as? MainActivity)?.showMenuBar()

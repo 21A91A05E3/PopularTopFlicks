@@ -21,7 +21,6 @@ class MovieListViewModel @Inject constructor(private val movieRepository: MovieR
     private var totalPages = 1
     private val _selectedCategory = MutableLiveData(MainActivity.POPULAR)
     val selectedCategory: LiveData<String> = _selectedCategory
-
     var lastSelectedCategory = ""
     init {
         fetchMovies()
@@ -54,7 +53,7 @@ class MovieListViewModel @Inject constructor(private val movieRepository: MovieR
                 }
                 is Resource.Error -> {
                     if (currentPage == 1) {
-                        _movies.value = Resource.Error("API Call Failed")
+                        _movies.postValue(Resource.Error("API Call Failed"))
                     }
                 }
                 else -> {

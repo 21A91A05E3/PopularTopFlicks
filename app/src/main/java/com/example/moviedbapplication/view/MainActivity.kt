@@ -23,8 +23,7 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-
-        toolbar.title = "Popular Movies"
+        toolbar.title =  viewmodel.selectedCategory
         setSupportActionBar(toolbar)
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -34,18 +33,16 @@ class MainActivity : AppCompatActivity() {
                 return when (menuItem.itemId) {
                     R.id.action_popular -> {
                         toolbar.title = "Popular Movies"
-                        viewmodel.selectedCategory = POPULAR
-                            setCategory(POPULAR)
+                        viewmodel.selectedCategory = "Popular Movies"
+                        setCategory(POPULAR)
                         true
                     }
-
                     R.id.action_top_rated -> {
                         toolbar.title = "Top Rated Movies"
-                        viewmodel.selectedCategory = TOP_RATED
+                        viewmodel.selectedCategory ="Top Rated Movies"
                         setCategory(TOP_RATED)
                         true
                     }
-
                     else -> false
                 }
             }

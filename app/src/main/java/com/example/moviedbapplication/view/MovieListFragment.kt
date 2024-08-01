@@ -46,16 +46,13 @@ class MovieListFragment : Fragment() {
         movieViewModel.movies.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> {
-                    Log.d("Check", "API Loading")
                     progressBar.isVisible = true
                     movieRecyclerView.isVisible = false
                 }
                 is Resource.Success -> {
-                    Log.d("Check", "API Calling")
                     progressBar.isVisible = false
                     movieRecyclerView.isVisible = true
                     resource.data?.let { newMovies ->
-                        Log.d("Check", "Movies: ${newMovies}")
                         movieAdapter.updateMovies(newMovies)
                         movieAdapter.notifyDataSetChanged()
                     }
