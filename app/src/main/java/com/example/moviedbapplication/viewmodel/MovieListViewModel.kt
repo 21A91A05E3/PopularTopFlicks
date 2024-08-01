@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviedbapplication.model.remote.Constants
 import com.example.moviedbapplication.model.remote.moviedata.MovieData
 import com.example.moviedbapplication.model.remote.Resource
 import com.example.moviedbapplication.model.repository.MovieRepository
@@ -20,6 +21,8 @@ class MovieListViewModel @Inject constructor(private val movieRepository: MovieR
     private var totalPages = 1
     private val _selectedCategory = MutableLiveData(MainActivity.POPULAR)
     val selectedCategory: LiveData<String> = _selectedCategory
+
+    var lastSelectedCategory = ""
     init {
         fetchMovies()
     }

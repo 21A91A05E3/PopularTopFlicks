@@ -39,9 +39,14 @@ class MovieDetailFragment : Fragment() {
     private lateinit var reviewRecyclerView: RecyclerView
     private lateinit var favouriteButton: ImageButton
     private lateinit var backButton: ImageButton
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         return inflater.inflate(R.layout.movie_detail_fragment, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val movieId = arguments?.getInt("MovieId")
@@ -94,9 +99,10 @@ class MovieDetailFragment : Fragment() {
         }
         movieDetailViewModel.checkIfFavourite(movieId ?: 0)
             .observe(viewLifecycleOwner) { isFavourite ->
-                favouriteButton.setImageResource(
-                    if (isFavourite) R.drawable.liked_icon else R.drawable.unliked_icon
-                )
+                isFavourite?.let {
+                    favouriteButton.setImageResource(if (isFavourite) R.drawable.liked_icon else R.drawable.unliked_icon)
+                }
+
             }
         favouriteButton.setOnClickListener {
             movieId?.let { id ->
@@ -108,11 +114,11 @@ class MovieDetailFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
     }
+
     private fun updateMovieDetails(movie: MovieData) {
         val posterUrl = movie.backdropPath?.let { "https://image.tmdb.org/t/p/w500$it" }
         posterUrl?.let {
-            Picasso.get().load(it).placeholder(R.drawable.placeholder_image)
-                .into(movieImage)
+            Picasso.get().load(it).placeholder(R.drawable.placeholder_image).into(movieImage)
         } ?: run {
             movieImage.setImageResource(R.drawable.placeholder_image)
         }
@@ -120,16 +126,20 @@ class MovieDetailFragment : Fragment() {
         movieTitle.text = movie.title
         movieOverview.text = movie.overview
     }
+
     private fun updateTrailerDetails(trailer: List<TrailerResult?>) {
         trailerAdapter.updateTrailers(trailer)
     }
+
     private fun updateReviewDetails(review: List<ReviewResult?>) {
         reviewAdapter.updateReviews(review)
     }
+
     override fun onResume() {
         super.onResume()
         (activity as? MainActivity)?.hideMenuBar()
     }
+
     override fun onPause() {
         super.onPause()
         (activity as? MainActivity)?.showMenuBar()

@@ -1,5 +1,6 @@
 package com.example.moviedbapplication.view
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -39,7 +40,7 @@ class MovieListFragment : Fragment() {
                 MovieDetailFragment().apply { arguments = bundle }).addToBackStack(null).commit()
         }, loadMore = { movieViewModel.loadMore() })
         movieRecyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
+            layoutManager = GridLayoutManager(requireContext(), getSpanCount())
             adapter = movieAdapter
         }
         movieViewModel.movies.observe(viewLifecycleOwner) { resource ->
@@ -63,11 +64,25 @@ class MovieListFragment : Fragment() {
             }
         }
         movieViewModel.selectedCategory.observe(viewLifecycleOwner) {
-            movieViewModel.fetchMovies()
+            if(movieViewModel.lastSelectedCategory != it) {
+                movieViewModel.lastSelectedCategory = it
+                movieViewModel.fetchMovies()
+            }
         }
     }
     fun setCategory(category: String) {
         movieViewModel.setSelectedCategory(category)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val manager: GridLayoutManager = movieRecyclerView.layoutManager as GridLayoutManager
+        manager.spanCount =  if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
+    }
+
+    private fun getSpanCount(): Int {
+        return if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
+
     }
 }
 

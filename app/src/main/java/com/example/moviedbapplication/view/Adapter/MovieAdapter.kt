@@ -18,7 +18,6 @@ class MovieAdapter( private val loadMore: () -> Unit , private val onItemClick :
             val posterUrl = movie.posterPath?.let { "https://image.tmdb.org/t/p/w500$it" }
             if (posterUrl != null) {
                 Picasso.get().load(posterUrl)
-                    .resize(600,750)
                     .placeholder(R.drawable.placeholder_image)
                     .into(movieImage)
             } else {
